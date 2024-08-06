@@ -1,0 +1,44 @@
+Requires Java 11
+
+Run below command to run the script:
+java -jar target/JonathanPortugal-1.0-SNAPSHOT-jar-with-dependencies.jar
+
+Output filename:
+mrfFile.txt
+
+
+The methodology is to get the eins from the file and then use the search by ein url to get the list of mrf urls.
+I do this because the display names in the search by ein url seem to include the state code, which makes it easier to find the NY files
+I do think there is room for improvement here, but I would need to do more research
+
+For example:
+It looks like "39B0" or "39F0" is in all of the display names for NY in-network returned in the ein lookup response
+I haven't been able to check all of the names to be sure this pattern holds true
+If this pattern is consistent, then we might be able to search for "39B0" and "39F0" in the urls of the index file
+instead of getting the set of eins and using them to look up in the search by ein url
+This also might allow us to avoid doing a look up by HIOS, but I need to confirm that this pattern holds true
+for records that are have plan_type_id of HIOS
+
+This took me about 1.5 hours to write
+
+With my internet speeds, it would take close to 40 min to stream through the whole file.
+I unfortunately did not have enough time to run this for the whole file, so I just ran it
+for the first 100 unique eins in the file.
+
+Trade offs:
+I am looking for a list of EINs and then doing a look up. As mentioned earlier, I think
+this could be improved by searching for "39B0" or "39F0" in the index file urls instead,
+but I decided that using the lookup was better since I didn't have time to confirm if this
+pattern was consistent.
+
+I didn't consider cases where the plan_type_id was HIOS. I didn't have enough time to research this id type
+I also felt like if I were to build on this script I would focus on investigating the "39B0" or "39F0" pattern
+
+The script searches through the file for the EINs every time, but in theory this won't be changes.
+If I were to stick with the EIN look up solution, then it might make sense to save the EINs
+to a separate file and read from that file to do the EIN lookups.  We would still need to
+check the index file for update EINs, but this could be a separate process.
+
+There is a lot of opportunity to clean up the code. I was focusing more on investigation and
+creating a working solution instead of writing extensible code since this was more of a POC script
+
